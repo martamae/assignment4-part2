@@ -7,3 +7,8 @@ End: Mon, 11 May 2015 01:58:22 -0500
 Tasks: Finished input from user, wrote prepared statements,
 able to input and display data from user, created buttons, created
 category list
+
+Start: Mon, 11 May 2015 2:15:00 -0500
+End: Mon, 11 May 2015 13:32:32 -0500
+Tasks: Finsihed categories drop down. Got the buttons 
+working, and tested final product
