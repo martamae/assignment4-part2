@@ -32,21 +32,13 @@
             echo "Name cannot be blank<br>";
             $validInput = false;
         }
-        if (!$category) {
-            echo "Category cannot be blank<br>";
-            $validInput = false;
-        }
-        if (!$lengthInput) {
-            echo "Length cannot be blank<br>";
-            $validInput = false;
-        }
         if (!$length < 0) {
             echo "Length must be a positive value<br>";
             $validInput = false;
         }
     }
 
-    if($inputValid == false) {
+    if($validInput == true) {
         //Define prepare statement and test if failed
         if (!($statement = $mysqli->prepare("INSERT INTO video_store(name, category, length) VALUES (?, ?, ?)"))) {
             echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error;
@@ -89,7 +81,9 @@
     echo '<select name="categChoice">';
     echo '<option value="All">All</option>';
     while ($row = $categoryList->fetch_assoc()) {
-        echo '<option value="'.$row['category'].'">' . $row['category'] . '</option>';
+        if ($row['category'] != NULL) {
+            echo '<option value="' . $row['category'] . '">' . $row['category'] . '</option>';
+        }
     }
     echo '</select> <input type="submit" value="Select Category"></form>';
 
