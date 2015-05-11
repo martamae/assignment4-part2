@@ -28,7 +28,7 @@
 
         $validInput = true;
 
-        if (!$name) {
+        if (!$nameInput) {
             echo "Name cannot be blank<br>";
             $validInput = false;
         }
@@ -36,7 +36,7 @@
             echo "Category cannot be blank<br>";
             $validInput = false;
         }
-        if (!$length) {
+        if (!$lengthInput) {
             echo "Length cannot be blank<br>";
             $validInput = false;
         }
@@ -56,10 +56,25 @@
         echo "Binding parameters failed: " . $statement->errno . " " . $statement->error;
     }
 
-    //Execute and test result
+    //Execute
     $statement->execute();
-    //    echo "Execute failed: " . $statement->errno . " " . $statement->error;
-    //}
+
+    //Query to select data from table
+    $vidTable = $mysqli->query("SELECT name, category, length, rented FROM video_store");
+
+    echo "<table>";
+    echo "<tr> <td> Name <td>Category <td>Length <td>Checked Out/Available <td>Check-in/out <td> Delete";
+    while ($row = $vidTable->fetch_assoc()) {
+        echo "<tr> <td>" . $row['name'] . "<td>" . $row['category'] . "<td>" . $row['length'] . "<td>";
+        if ($row['rented'] == 1) {
+            echo "Checked Out";
+        }
+        else {
+            echo "Available";
+        }
+    }
+    echo "</table>";
+
 ?>
     </body>
 </html>
