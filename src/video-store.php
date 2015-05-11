@@ -60,17 +60,26 @@
     $statement->execute();
 
     $categoryList = $mysqli->query("SELECT distinct category FROM video_store");
-    echo "<form action='GET' name='categ'>";
-    echo "<select>";
+    echo '<form method="GET">';
+    echo '<select name="categChoice">';
+    echo '<option value="All">All</option>';
     while ($row = $categoryList->fetch_assoc()) {
+        echo '<option value="'.$row['category'].'">' . $row['category'] . '</option>';
+    }
+    echo '</select> <input type="submit" value="Select Category"></form>';
+
+    if($_GET["categChoice"]) {
+        $categSelect = $_GET["categChoice"];
     }
 
-    if($_GET['categ']) {
-        $categSelect = $_GET['categChoice'];
+   if ($categSelect != "All" && $categSelect != NULL) {
+       //Select All data from table
+        $vidTable = $mysqli->query("SELECT id, name, category, length, rented FROM video_store WHERE category ='".$categSelect."'");
+   }
+    else {
+        //Query to select specific category data from table
+        $vidTable = $mysqli->query("SELECT id, name, category, length, rented FROM video_store");
     }
-
-        //Query to select data from table
-        $vidTable = $mysqli->query("SELECT name, category, length, rented FROM video_store");
 
     echo "<table>";
     echo "<tr> <td> Name <td>Category <td>Length <td>Checked Out/Available <td>Check-in/out <td> Delete";
@@ -78,21 +87,38 @@
         echo "<tr> <td>" . $row['name'] . "<td>" . $row['category'] . "<td>" . $row['length'] . "<td>";
         if ($row['rented'] == 1) {
             echo "Checked Out";
-            echo "<td> <input type='button' value='Check-in'>";
+            echo '<td> <form method="POST"><input type="button" value="Check-in" name="in" id="'.$row['id'].'"></form>';
         }
         else {
             echo "Available";
-            echo "<td> <input type='button' value='Check-out'>";
+            echo '<td> <form method="POST"><input type="submit" value="Check-out" name = "out" id="'.$row['id'].'"></form>';
         }
-        echo "<td> <input type='button' value='Delete'>";
+        echo '<td> <input type="button" value="Delete">';
     }
     echo "</table>";
 
-    echo "<input type='submit' value='Delete All Videos' name='DeleteAll' action='POST'>";
-
-    if($_POST['DeleteAll']) {
-
+    if($_POST["in"]) {
+        $vidId = $_POST['id'];
+        $mysqli->query("UPDATE video_store SET rented='0' WHERE id = '".$vidId."'");
     }
+
+    if($_POST["out"]) {
+        $vidId = $_POST['id'];
+        $mysqli->query("UPDATE video_store SET rented='1' WHERE id = '".$vidId."'");
+    }
+
+    if($_POST["Delete"]) {
+        $vidId = $_POST['id'];
+        $mysqli->query("DELETE");
+    }
+
+    echo '<form method="POST"><input type="submit" value="Delete All Videos" name="DeleteAll"></form>';
+
+    if($_POST["DeleteAll"]) {
+        $mysqli->query("TRUNCATE TABLE video_store");
+    }
+
+    $mysqli->close();
 ?>
     </body>
 </html>
