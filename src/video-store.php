@@ -46,18 +46,43 @@
         }
     }
 
-    //Define prepare statement and test if failed
-    if (!($statement = $mysqli->prepare("INSERT INTO video_store(name, category, length) VALUES (?, ?, ?)"))) {
-        echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error;
+    if($inputValid == false) {
+        //Define prepare statement and test if failed
+        if (!($statement = $mysqli->prepare("INSERT INTO video_store(name, category, length) VALUES (?, ?, ?)"))) {
+            echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error;
+        }
+
+        //Binds parameters and test result
+        if (!($statement->bind_param('ssi', $nameInput, $category, $lengthInput))) {
+            echo "Binding parameters failed: " . $statement->errno . " " . $statement->error;
+        }
+
+        //Execute
+        $statement->execute();
     }
 
-    //Binds parameters and test result
-    if (!($statement->bind_param('ssi', $nameInput, $category, $lengthInput))) {
-        echo "Binding parameters failed: " . $statement->errno . " " . $statement->error;
+    if($_POST["in"]) {
+        $vidId = $_POST['in'];
+        $mysqli->query("UPDATE video_store SET rented=0 WHERE id = '".$vidId."'");
     }
 
-    //Execute
-    $statement->execute();
+    if($_POST["out"]) {
+        $vidId = $_POST["out"];
+        $mysqli->query("UPDATE video_store SET rented=1 WHERE id = '".$vidId."'");
+    }
+
+    if($_POST["Delete"]) {
+        $vidId = $_POST['Delete'];
+        $mysqli->query("DELETE FROM video_store WHERE id = '".$vidId."'");
+    }
+
+    if($_POST["DeleteAll"]) {
+        $mysqli->query("TRUNCATE TABLE video_store");
+    }
+
+    if($_GET["categChoice"]) {
+        $categSelect = $_GET["categChoice"];
+    }
 
     $categoryList = $mysqli->query("SELECT distinct category FROM video_store");
     echo '<form method="GET">';
@@ -67,10 +92,6 @@
         echo '<option value="'.$row['category'].'">' . $row['category'] . '</option>';
     }
     echo '</select> <input type="submit" value="Select Category"></form>';
-
-    if($_GET["categChoice"]) {
-        $categSelect = $_GET["categChoice"];
-    }
 
    if ($categSelect != "All" && $categSelect != NULL) {
        //Select All data from table
@@ -87,36 +108,17 @@
         echo "<tr> <td>" . $row['name'] . "<td>" . $row['category'] . "<td>" . $row['length'] . "<td>";
         if ($row['rented'] == 1) {
             echo "Checked Out";
-            echo '<td> <form method="POST"><input type="button" value="Check-in" name="in" id="'.$row['id'].'"></form>';
+            echo '<td> <form method="POST"><button type="submit" value="'.$row['id'].'" name="in">Check-in</button></form>';
         }
         else {
             echo "Available";
-            echo '<td> <form method="POST"><input type="submit" value="Check-out" name = "out" id="'.$row['id'].'"></form>';
+            echo '<td> <form method="POST"><button type="submit" value="'.$row['id'].'" name ="out">Check-out</button></form>';
         }
-        echo '<td> <input type="button" value="Delete">';
+        echo '<td> <form method="POST"><button type="submit" value="'.$row['id'].'" name="Delete">Delete</button></form>';
     }
     echo "</table>";
 
-    if($_POST["in"]) {
-        $vidId = $_POST['id'];
-        $mysqli->query("UPDATE video_store SET rented='0' WHERE id = '".$vidId."'");
-    }
-
-    if($_POST["out"]) {
-        $vidId = $_POST['id'];
-        $mysqli->query("UPDATE video_store SET rented='1' WHERE id = '".$vidId."'");
-    }
-
-    if($_POST["Delete"]) {
-        $vidId = $_POST['id'];
-        $mysqli->query("DELETE");
-    }
-
     echo '<form method="POST"><input type="submit" value="Delete All Videos" name="DeleteAll"></form>';
-
-    if($_POST["DeleteAll"]) {
-        $mysqli->query("TRUNCATE TABLE video_store");
-    }
 
     $mysqli->close();
 ?>
