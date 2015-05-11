@@ -59,8 +59,18 @@
     //Execute
     $statement->execute();
 
-    //Query to select data from table
-    $vidTable = $mysqli->query("SELECT name, category, length, rented FROM video_store");
+    $categoryList = $mysqli->query("SELECT distinct category FROM video_store");
+    echo "<form action='GET' name='categ'>";
+    echo "<select>";
+    while ($row = $categoryList->fetch_assoc()) {
+    }
+
+    if($_GET['categ']) {
+        $categSelect = $_GET['categChoice'];
+    }
+
+        //Query to select data from table
+        $vidTable = $mysqli->query("SELECT name, category, length, rented FROM video_store");
 
     echo "<table>";
     echo "<tr> <td> Name <td>Category <td>Length <td>Checked Out/Available <td>Check-in/out <td> Delete";
@@ -78,6 +88,11 @@
     }
     echo "</table>";
 
+    echo "<input type='submit' value='Delete All Videos' name='DeleteAll' action='POST'>";
+
+    if($_POST['DeleteAll']) {
+
+    }
 ?>
     </body>
 </html>
