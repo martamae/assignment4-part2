@@ -68,10 +68,13 @@
         echo "<tr> <td>" . $row['name'] . "<td>" . $row['category'] . "<td>" . $row['length'] . "<td>";
         if ($row['rented'] == 1) {
             echo "Checked Out";
+            echo "<td> <input type='button' value='Check-in'>";
         }
         else {
             echo "Available";
+            echo "<td> <input type='button' value='Check-out'>";
         }
+        echo "<td> <input type='button' value='Delete'>";
     }
     echo "</table>";
 
