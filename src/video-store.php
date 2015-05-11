@@ -12,10 +12,11 @@
         <p><input type="submit" value="Add Video" name="addVid"></p>
     </form>
 <?php
+    include "secret.php";
     $validInput = false;
 
     //Connecting
-    $mysqli = new mysqli("oniddb.cws.oregonstate.edu", "wegnerma-db", "Ejey1gzLdNY5wWpw", "wegnerma-db");
+    $mysqli = new mysqli("oniddb.cws.oregonstate.edu", "wegnerma-db", $password, "wegnerma-db");
 
     if (!$mysqli|| $mysqli->connect_errno) {
         echo "Failed to connect:" . $mysqli->connect_errno . " " . $mysqli->connect_error;
