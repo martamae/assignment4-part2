@@ -1,0 +1,9 @@
+Start: Thur, 7 May 2015 16:27:06 -0500
+End: Fri, 8 May 2015 02:27:06 -0500
+Tasks: Made table, started to work on text input from user
+
+Start: Sun, 10 May 2015 12:00:00 -0500
+End: Mon, 11 May 2015 01:58:22 -0500
+Tasks: Finished input from user, wrote prepared statements,
+able to input and display data from user, created buttons, created
+category list
